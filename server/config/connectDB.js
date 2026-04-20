@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
-import dotenv from 'dotenv';
+import Env from "../utils/Env.js";
 
-// use to use take data from .env files 
-dotenv.config();
+
 
 // call function in app to connecting mongoDB  
 const connectDB = async ()=>{
-        await mongoose.connect(process.env.DATABASE_URL)
+        await mongoose.connect(Env.DATABASE_URL)
         .then(
                 ()=>{
                         console.log("connected with DB successfully ")

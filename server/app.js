@@ -1,20 +1,73 @@
-import express from 'express';
-import connectDB from './config/connectDB.js';
-import dotenv from 'dotenv';
-import router from './routes/routes.js';
+import express from "express";
+import Env from "./utils/Env.js";
+import connectDB from "./config/connectDB.js";
 
-dotenv.config();
+// Routes
+import authRouter from "./routes/Auth.routes.js";
+import messageRouter from "./routes/Message.routes.js";
+import ContactsRouter from "./routes/Contact.routes.js";
+import RoomRouter from "./routes/Room.routes.js";
 
+// parsing middlewares
+import cookieParser from "cookie-parser";
+
+// protection middlewares 
+import helmet from "helmet";
+import { generalLimiter } from "./middlewares/rateLimiter.middleware.js";
+import mongoSanitize from 'express-mongo-sanitize';
+
+
+
+
+// initializing middlewares
 const app = express();
-app.use(express.json())
-const port = process.env.PORT || 3000;
 
 
-connectDB();
+// 1. TRUST PROXY (Required for rate limiting on most hosting platforms)
+app.set('trust proxy', 1);
 
-app.listen(port , ()=>{
-    console.log("Server started sucessfully at port " , port);
-})
+// 2. SECURITY MIDDLEWARES
 
-app.use("/api/v1" , router);
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        // Allow images to be loaded from your server ('self') and Cloudinary
+        "img-src": ["'self'", "data:", "://cloudinary.com"],
+      },
+    },
+  })
+);
+app.use(express.json());
+app.use(cookieParser());
+app.use(mongoSanitize());
+
+
+
+// routes
+
+app.use("/api/v1",generalLimiter);
+app.use("/api/v1/auth",authRouter);
+app.use("/api/v1" , RoomRouter);
+app.use("api/v1",ContactsRouter);
+app.use("/api/v1",messageRouter);
+
+
+// calling function to connect with DB
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(Env.PORT, () => {
+      console.log(`Server connected at PORT : ${Env.PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+
+startServer();
 
