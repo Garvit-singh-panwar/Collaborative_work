@@ -11,12 +11,12 @@ import { authenticate } from "../middlewares/Auth.middlewares.js";
 const messageRouter = express.Router();
 
 // fetch message
-messageRouter.get("/message", authenticate, getMessages);
+messageRouter.get("/:roomId", authenticate, getMessages);
 
 // send message
-messageRouter.post("/message", authenticate, sendMessage)
+messageRouter.post("/:roomId", authenticate, sendMessage)
 
 // delete message
-messageRouter.delete("/message", authenticate , deleteMessage);
+messageRouter.delete("/:roomId", authenticate , deleteMessage);
 
-export default messageRouter;
+export default messageRouter;   

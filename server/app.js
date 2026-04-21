@@ -49,9 +49,9 @@ app.use(mongoSanitize());
 
 app.use("/api/v1",generalLimiter);
 app.use("/api/v1/auth",authRouter);
-app.use("/api/v1" , RoomRouter);
-app.use("api/v1",ContactsRouter);
-app.use("/api/v1",messageRouter);
+app.use("/api/v1/room" , RoomRouter);
+app.use("api/v1/contacts",ContactsRouter);
+app.use("/api/v1/message",messageRouter);
 
 
 // calling function to connect with DB

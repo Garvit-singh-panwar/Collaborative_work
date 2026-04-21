@@ -10,16 +10,16 @@ import  {createRoom, addParticipants, removeParticipants, removeRoom } from '../
 const RoomRouter = express.Router();
 
 // create room 
-RoomRouter.post("/room", authenticate, createRoom);
+RoomRouter.post("/", authenticate, createRoom);
 
 // add user in group
-RoomRouter.patch("/room/participant" ,authenticate, addParticipants);
+RoomRouter.patch("/participant" ,authenticate, addParticipants);
 
 // delete user in group
-RoomRouter.delete("/room/participant" , authenticate, removeParticipants );
+RoomRouter.delete("/participant" , authenticate, removeParticipants );
 
 // delete room
-RoomRouter.delete("/room" , authenticate , removeRoom);
+RoomRouter.delete("/" , authenticate , removeRoom);
 
 
 export default RoomRouter;
