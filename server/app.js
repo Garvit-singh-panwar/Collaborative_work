@@ -40,8 +40,14 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(mongoSanitize());
+app.use((req, res, next) => {
+  mongoSanitize.sanitize(req.body, { replaceWith: '_' });
+  mongoSanitize.sanitize(req.query, { replaceWith: '_' });
+  mongoSanitize.sanitize(req.params, { replaceWith: '_' });
+  next();
+});
 
 
 
@@ -50,7 +56,7 @@ app.use(mongoSanitize());
 app.use("/api/v1",generalLimiter);
 app.use("/api/v1/auth",authRouter);
 app.use("/api/v1/room" , RoomRouter);
-app.use("api/v1/contacts",ContactsRouter);
+app.use("/api/v1/contacts",ContactsRouter);
 app.use("/api/v1/message",messageRouter);
 
 

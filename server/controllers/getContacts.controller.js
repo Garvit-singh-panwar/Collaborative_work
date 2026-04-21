@@ -1,5 +1,5 @@
-import Room from "../models/room.model";
-import User from "../models/user.model";
+import Room from "../models/room.model.js";
+import User from "../models/user.model.js";
 
 export const getMyRooms = async (req, res) => {
     try {
@@ -7,7 +7,10 @@ export const getMyRooms = async (req, res) => {
         const userId = req.user._id;
 
         const rooms = await Room.find({ participants: userId })
-            .populate("participants", "username profilePic bio") // Get the details!
+            .populate({
+                path: "participants",
+                select: "userName profilePic bio" // Specifically asking for these
+            }) // Get the details!
             .sort("-updatedAt")
             .lean(); // Most recent chats on top
 
@@ -21,10 +24,10 @@ export const getMyRooms = async (req, res) => {
                 
                 return {
                     ...room,
-                    roomName: otherUser ? otherUser.username : "Unknown User",
-                    roomPic: otherUser ? otherUser.profilePic : null,
+                    roomName:   otherUser.userName || "Unknown User",
+                    roomPic:  otherUser.ProfilePic || null,
                     // Useful for frontend to know exactly who the "other" is
-                    otherUserId: otherUser ? otherUser._id : null 
+                    otherUserId: otherUser._id || null ,
                 };
             }
             

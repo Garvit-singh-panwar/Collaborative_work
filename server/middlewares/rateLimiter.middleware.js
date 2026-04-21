@@ -18,10 +18,10 @@ export const authLimiter = rateLimit({
 
 
 // This is a general limiter for all other API calls
-// limit req max req 50
+// limit req max req 15
 export const generalLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 2 minute
-  max: 50, // Allow 50 requests per minute
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 15, // Allow 15 requests per minute
   message: {
     success: false,
     message: "High traffic detected. Please slow down."

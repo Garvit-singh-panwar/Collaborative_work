@@ -1,6 +1,6 @@
-import User from "../models/user.model";
-import Room from "../models/room.model";
-import Message from "../models/message.model";
+import User from "../models/user.model.js";
+import Room from "../models/room.model.js";
+import Message from "../models/message.model.js";
 
 export const getMessages = async (req, res) => {
     try {

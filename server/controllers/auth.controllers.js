@@ -58,6 +58,8 @@ try {
 
     generateToken(user._id , res);
 
+    user.password = undefined;
+
     res.status(201).json(
         {
             success:true,
